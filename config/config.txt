@@ -1,6 +1,7 @@
 # You can use the "$include" directive to split your configs however you want
 
-$include game_options.txt
+$include laplas_config/laplas_game_options.txt
+$include laplas_config/laplas_configs
 $include client_features.txt
 $include dbconfig.txt
 $include comms.txt
@@ -17,10 +18,10 @@ $include atmos_mix.txt
 # There are various options which are hard-locked for security reasons.
 
 ## Server name: This appears at the top of the screen in-game and in the BYOND hub. Uncomment and replace 'Shiptest' with the name of your choice.
-# SERVERNAME Shiptest
+SERVERNAME Laplas station | avali | anomaly | space exploration
 
 ## Server SQL name: This is the name used to identify the server to the SQL DB, distinct from SERVERNAME as it must be at most 32 characters.
-# SERVERSQLNAME shiptest
+# SERVERSQLNAME LPA
 
 ## Station name: The name of the station as it is referred to in-game. If commented out, the game will generate a random name instead.
 STATIONNAME Space Station 13
@@ -29,10 +30,10 @@ STATIONNAME Space Station 13
 #HUB
 
 ## Lobby time: This is the amount of time between rounds that players have to setup their characters and be ready.
-LOBBY_COUNTDOWN 120
+LOBBY_COUNTDOWN 240
 
 ## Round End Time: This is the amount of time after the round ends that players have to murder death kill each other.
-ROUND_END_COUNTDOWN 90
+ROUND_END_COUNTDOWN 120
 
 ## Comment this out if you want to use the SQL based admin system, the legacy system uses admins.txt.
 ## You need to set up your database to use the SQL based system.
@@ -166,13 +167,13 @@ LOG_SHUTTLE
 PICTURE_LOGGING_CAMERA
 
 ## period of time in seconds for players to be considered inactive
-# INACTIVITY_PERIOD 300
+INACTIVITY_PERIOD 300
 
 ## period of time in seconds for players to be considered afk and kickable
-# AFK_PERIOD 600
+AFK_PERIOD 600
 
 ## disconnect players who are considered afk
-# KICK_INACTIVE
+KICK_INACTIVE
 
 ## Comment this out to stop admins being able to choose their personal ooccolor
 ALLOW_ADMIN_OOCCOLOR
@@ -202,19 +203,19 @@ VOTE_AUTOTRANSFER_INITIAL 72000
 VOTE_AUTOTRANSFER_INTERVAL 18000
 
 ## prevents dead players from voting or starting votes
-# NO_DEAD_VOTE
+NO_DEAD_VOTE
 
 ## players' votes default to "No vote" (otherwise,  default to "No change")
 # DEFAULT_NO_VOTE
 
 ## disable abandon mob
-#NORESPAWN
+NORESPAWN
 
 ## disables calling del(src) on newmobs if they logout before spawnin in
 # DONT_DEL_NEWMOB
 
 ## set a hosted by name for unix platforms
-HOSTEDBY Yournamehere
+HOSTEDBY Fenysha
 
 ## Set to jobban "Guest-" accounts from Captain, HoS, HoP, CE, RD, CMO, Warden, Security, Detective, and AI positions.
 ## Set to 1 to jobban them from those positions, set to 0 to allow them.
@@ -327,7 +328,7 @@ TICKLAG 0.5
 #AUTOMUTE_ON
 
 ## Uncomment this to let players see their own notes (they can still be set by admins only)
-#SEE_OWN_NOTES
+SEE_OWN_NOTES
 
 ### Comment these two out to prevent notes fading out over time for admins.
 ## Notes older then this will start fading out.
@@ -525,7 +526,7 @@ DISABLE_HIGH_POP_MC_MODE_AMOUNT 60
 ##  15x15 would be the standard square view. 21x15 is what goonstation uses for widescreen.
 ##  Setting this to something different from DEFAULT_VIEW_SQUARE will enable widescreen toggles
 ##	Do note that changing this value will affect the title screen. The title screen will have to be updated manually if this is changed.
-DEFAULT_VIEW 21x15
+DEFAULT_VIEW 19x15
 
 ##Default view size, in tiles. Should *always* be square.
 ## The alternative square viewport size if you're using a widescreen view size
@@ -574,7 +575,7 @@ RESPAWN_TIMER 600
 ## If the number of controlled non-subshuttle ships in existence is greater than this number,
 ## the shuttle creator and roundstart menu will stop new ships from being created.
 ## If this is undesired, just set this to an arbitrarily high value.
-MAX_SHUTTLE_COUNT 20
+MAX_SHUTTLE_COUNT 10
 
 ## Limits the maximum size in tiles of a custom shuttle.
 MAX_SHUTTLE_SIZE 300

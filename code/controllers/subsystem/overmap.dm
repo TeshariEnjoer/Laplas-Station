@@ -125,6 +125,8 @@ SUBSYSTEM_DEF(overmap)
  * The proc that creates all the objects on the overmap, split into seperate procs for redundancy.
  */
 /datum/controller/subsystem/overmap/proc/create_map()
+	spawn_mathership() // Laplas edit: mathership
+
 	if (generator_type == OVERMAP_GENERATOR_SOLAR)
 		spawn_events_in_orbits()
 		spawn_ruin_levels_in_orbits()
