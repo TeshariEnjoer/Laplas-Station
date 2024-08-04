@@ -125,7 +125,7 @@ SUBSYSTEM_DEF(overmap)
  * The proc that creates all the objects on the overmap, split into seperate procs for redundancy.
  */
 /datum/controller/subsystem/overmap/proc/create_map()
-	spawn_mathership() // Laplas edit: mathership
+	InitializeMathership() // Laplas edit: mathership
 
 	if (generator_type == OVERMAP_GENERATOR_SOLAR)
 		spawn_events_in_orbits()
@@ -283,7 +283,7 @@ SUBSYSTEM_DEF(overmap)
 		dynamic_datum.vlevel_width,
 		dynamic_datum.vlevel_height,
 		ALLOCATION_QUADRANT,
-		QUADRANT_MAP_SIZE
+		DUORANT_MAP_SIZE //Laplas edit
 	)
 
 	vlevel.reserve_margin(QUADRANT_SIZE_BORDER)

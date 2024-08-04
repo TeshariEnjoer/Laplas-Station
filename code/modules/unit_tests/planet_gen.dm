@@ -7,10 +7,10 @@
 			planet_name,
 			list(ZTRAIT_MINING = TRUE, ZTRAIT_BASETURF = planet_type.default_baseturf),
 			mapzone,
-			QUADRANT_MAP_SIZE,
-			QUADRANT_MAP_SIZE,
+			DUORANT_MAP_SIZE,
+			DUORANT_MAP_SIZE,
 			ALLOCATION_QUADRANT,
-			QUADRANT_MAP_SIZE
+			DUORANT_MAP_SIZE
 		)
 		mapgen.generate_turfs(vlevel.get_unreserved_block())
 		mapgen.populate_turfs(vlevel.get_unreserved_block())

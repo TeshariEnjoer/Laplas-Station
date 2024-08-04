@@ -123,7 +123,8 @@
 	.["autoMeet"] = user.client && !user.client.is_playtime_restriction_eligible()
 	.["playMin"] = user.client ? user.client.get_exp_living(TRUE) : 0
 
-	for(var/datum/overmap/ship/controlled/S as anything in SSovermap.controlled_ships)
+	for(var/thing as anything in SSovermap.controlled_ships) //Laplas edit - mathership
+		var/datum/overmap/ship/controlled/S = thing
 		if(S.source_template)
 			if(!template_num_lookup[S.source_template])
 				template_num_lookup[S.source_template] = 1

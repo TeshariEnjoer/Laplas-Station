@@ -1,7 +1,7 @@
 # You can use the "$include" directive to split your configs however you want
 
 $include laplas_config/laplas_game_options.txt
-$include laplas_config/laplas_configs
+$include laplas_config/laplas_configs.txt
 $include client_features.txt
 $include dbconfig.txt
 $include comms.txt

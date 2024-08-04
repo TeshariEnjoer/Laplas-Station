@@ -244,6 +244,7 @@ GLOBAL_DATUM(syndicate_code_response_regex, /regex)
 #define FACTION_FRONTIER "Frontiersmen Fleet"
 #define FACTION_PGF "Pan-Gezenan Federation"
 #define FACTION_INDEPENDENT "Independent"
+#define FACTION_LAPLAS "La'plas Anomalistic Corporation" //Laplas edit
 
 #define PREFIX_SYNDICATE list("SEV", "SSV")
 	#define PREFIX_NGR list("NGRV")
@@ -259,6 +260,7 @@ GLOBAL_DATUM(syndicate_code_response_regex, /regex)
 #define PREFIX_FRONTIER list("FFV")
 #define PREFIX_PGF list("PGF", "PGFMC", "PGFN")
 #define PREFIX_INDEPENDENT list("SV", "IMV", "ISV")
+#define PREFIX_LAPLAS list("LEV", "LCV", "LRV", "LDV") // Laplas edit
 
 /// List of all ship factions to their prefixes.
 GLOBAL_LIST_INIT(ship_faction_to_prefixes, list(
@@ -275,7 +277,8 @@ GLOBAL_LIST_INIT(ship_faction_to_prefixes, list(
 	FACTION_VIGILITAS = PREFIX_VIGILITAS,
 	FACTION_FRONTIER = PREFIX_FRONTIER,
 	FACTION_PGF = PREFIX_PGF,
-	FACTION_INDEPENDENT = PREFIX_INDEPENDENT
+	FACTION_INDEPENDENT = PREFIX_INDEPENDENT,
+	FACTION_LAPLAS = PREFIX_LAPLAS	// Laplas edit
 ))
 
 /proc/ship_prefix_to_faction(prefix)

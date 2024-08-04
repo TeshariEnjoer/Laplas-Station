@@ -42,9 +42,9 @@
 	var/datum/weather_controller/weather_controller_type
 
 	///The Y bounds of the virtual z level
-	var/vlevel_height = QUADRANT_MAP_SIZE
+	var/vlevel_height = DUORANT_MAP_SIZE //Laplas edit
 	///The X bounds of the virtual z level
-	var/vlevel_width = QUADRANT_MAP_SIZE
+	var/vlevel_width = DUORANT_MAP_SIZE
 
 	//controls what kind of sound we play when we land and the maptext comes up
 	var/landing_sound

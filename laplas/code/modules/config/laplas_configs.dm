@@ -1,2 +1,2 @@
-/datum/config_entry/string/default_ship
-	config_entry_value = "nanotrasen_meta"
+/datum/config_entry/string/default_mathership
+	config_entry_value = "laplas_devship"

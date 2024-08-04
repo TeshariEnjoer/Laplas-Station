@@ -82,6 +82,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 
 /area/ship/Destroy()
 	mobile_port = null
+	important_objects = null // Laplas edit)
 	. = ..()
 
 //Returns how many shuttles are missing a skipovers on a given turf, this usually represents how many shuttles have hull breaches on this turf. This only works if this is the actual area of T when called.

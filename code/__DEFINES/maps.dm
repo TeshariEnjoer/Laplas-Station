@@ -121,11 +121,12 @@ require only minor tweaks.
 #define BIOME_WARM_CAVE "warm_cave"
 #define BIOME_HOT_CAVE "hot_cave"
 
-
+#define ALLOCATION_FORBID 0
 #define ALLOCATION_FREE 1
 #define ALLOCATION_QUADRANT 2
 
-#define QUADRANT_MAP_SIZE 127
+#define QUADRANT_MAP_SIZE 255
+#define	DUORANT_MAP_SIZE 127
 
 #define QUADRANT_SIZE_BORDER 3
 #define TRANSIT_SIZE_BORDER 3

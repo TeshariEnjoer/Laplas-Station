@@ -324,6 +324,8 @@ SUBSYSTEM_DEF(mapping)
 	var/created_new_level = FALSE
 	while(TRUE)
 		for(var/datum/space_level/iterated_level as anything in levels_to_check)
+			if(iterated_level.allocation_type == ALLOCATION_FORBID)
+				continue
 			if(iterated_level.allocation_type != allocation_type)
 				continue
 			allocation_list = find_allocation_in_level(iterated_level, size_x, size_y, allocation_jump)
@@ -393,25 +395,3 @@ SUBSYSTEM_DEF(mapping)
 	height--
 	var/list/allocation_coords = SSmapping.get_free_allocation(allocation_type, width, height, allocation_jump)
 	return new /datum/virtual_level(new_name, traits, mapzone, allocation_coords[1], allocation_coords[2], allocation_coords[1] + width, allocation_coords[2] + height, allocation_coords[3])
-
-/// LAPLAS ADDICTION - SHIPS: creates new private virtual level and places a mathership inside it
-/datum/controller/subsystem/mapping/proc/init_mathership(list/errorList, full_path, list/traits)
-	. = list()
-	// Preparing map and loading ship
-	INIT_ANNOUNCE("Begin loading mathership!")
-	var/load_start_time = REALTIMEOFDAY
-	var/datum/parsed_map/pm = new(file(full_path))
-	if(!istype(pm))
-		stack_trace("failed to resolve mathership blueprint by path: [full_path] , aborting loading!")
-		return
-	if(!length(traits))
-		traits = VTRAITS_MOTHERSHIP
-	var/datum/map_zone/mz = new("Mathership")
-	var/datum/virtual_level/vlevel = new("Mathership", traits, mz, world.maxx, world.maxy, ALLOCATION_FREE)
-	var/turf/load_turf = vlevel.get_unreserved_bottom_left_turf()
-	if (!pm.load(load_turf.x, load_turf.y, load_turf.z, no_changeturf = TRUE))
-		stack_trace("failed to load mathership with path: [pm.original_path].")
-		errorList |= pm.original_path
-		return
-	INIT_ANNOUNCE("Loaded mathership in [(REALTIMEOFDAY - load_start_time)/10]s!")
-	return pm

@@ -1,2 +1,2 @@
 ## Name of the ship that will be loaded by default
-DEFAULT_SHIP nanotrasen_meta
+DEFAULT_MATHERSHIP laplas_devship

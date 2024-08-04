@@ -1586,6 +1586,8 @@
 		var/area/ship/ship = A
 		if(istype(ship))
 			var/obj/docking_port/mobile/shuttle = ship.mobile_port
+			if(istype(shuttle, /obj/docking_port/mobile/mathership))
+				return max_grav
 			if(shuttle)
 				if(istype(shuttle.docked, /obj/docking_port/stationary))
 					var/obj/docking_port/stationary/shipfinder = shuttle.docked

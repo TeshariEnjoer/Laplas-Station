@@ -1,0 +1,23 @@
+{
+	"$schema": "https://raw.githubusercontent.com/shiptest-ss13/Shiptest/master/_maps/ship_config_schema.json",
+	"map_name": "Class shit - development ship",
+	"prefix": "LEV",
+	"description": "It's a test ship created for server development, you shouldn't see it - and if you do, call the admin to remove it - it's a bug. By the way, that ship belongs to Laplas. Which means everything about this corporation applies to this ship as well......",
+	"tags": [
+		"Generalist"
+	],
+	"namelists": [
+		"GENERAL",
+		"SPACE"
+	],
+	"map_short_name": "datum-class",
+	"map_path": "_maps/shuttles/matherships/laplas_devship.dmm",
+	"map_id": "laplas_devship",
+	"job_slots": {
+		"Vanguard": {
+			"outfit": "/datum/outfit/job/captain",
+			"officer": true,
+			"slots": 99
+		}
+	}
+}
