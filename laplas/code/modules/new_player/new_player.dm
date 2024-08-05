@@ -17,37 +17,19 @@
 		make_me_an_observer()
 		return
 
-	if(href_list["job_traits"])
-		play_lobby_button_sound()
-//		show_job_traits()
-		return
 
 	if(href_list["view_manifest"])
 		play_lobby_button_sound()
 		ViewManifest()
 		return
 
-	if(href_list["toggle_antag"])
-		play_lobby_button_sound()
-//		var/datum/preferences/preferences = client.prefs
-//		preferences.write_preference(GLOB.preference_entries[/datum/preference/toggle/be_antag], !preferences.read_preference(/datum/preference/toggle/be_antag))
-//		client << output(preferences.read_preference(/datum/preference/toggle/be_antag), "title_browser:toggle_antag")
-		return
-
 	if(href_list["character_setup"])
 		play_lobby_button_sound()
-//		var/datum/preferences/preferences = client.prefs
-//		preferences.current_window = PREFERENCE_TAB_CHARACTER_PREFERENCES
-//		preferences.update_static_data(src)
-//		preferences.ui_interact(src)
+		client.prefs.ShowChoices(src)
 		return
 
 	if(href_list["game_options"])
 		play_lobby_button_sound()
-//		var/datum/preferences/preferences = client.prefs
-//		preferences.current_window = PREFERENCE_TAB_GAME_PREFERENCES
-//		preferences.update_static_data(usr)
-//		preferences.ui_interact(usr)
 		return
 
 	if(href_list["toggle_ready"])
@@ -58,7 +40,7 @@
 
 	if(href_list["late_join"])
 		play_lobby_button_sound()
-//		GLOB.latejoin_menu.ui_interact(usr)
+		LateChoices()
 
 	if(href_list["title_is_ready"])
 		title_screen_is_ready = TRUE
@@ -83,7 +65,7 @@
 	assets.send(src)
 
 	update_title_screen()
-l
+
 /**
  * Hard updates the title screen HTML, it causes visual glitches if used.
  */
@@ -104,29 +86,6 @@ l
 /mob/dead/new_player/proc/hide_title_screen()
 	if(client?.mob)
 		winset(client, "title_browser", "is-disabled=true;is-visible=false")
-		winset(client, "status_bar", "is-visible=true")
 
 /mob/dead/new_player/proc/play_lobby_button_sound()
-	SEND_SOUND(src, sound('laplas/sound/effects/save.ogg'))
-
-/**
- * Allows the player to select a server to join from any loaded servers.
- */
-/mob/dead/new_player/proc/server_swap()
-	var/list/servers = CONFIG_GET(keyed_list/cross_server)
-	if(LAZYLEN(servers) == 1)
-		var/server_name = servers[1]
-		var/server_ip = servers[server_name]
-		var/confirm = tgui_alert(src, "Are you sure you want to swap to [server_name] ([server_ip])?", "Swapping server!", list("Send me there", "Stay here"))
-		if(confirm == "Connect me!")
-			to_chat_immediate(src, "So long, spaceman.")
-			client << link(server_ip)
-		return
-	var/server_name = tgui_input_list(src, "Please select the server you wish to swap to:", "Swap servers!", servers)
-	if(!server_name)
-		return
-	var/server_ip = servers[server_name]
-	var/confirm = tgui_alert(src, "Are you sure you want to swap to [server_name] ([server_ip])?", "Swapping server!", list("Connect me!", "Stay here!"))
-	if(confirm == "Connect me!")
-		to_chat_immediate(src, "So long, spaceman.")
-		src.client << link(server_ip)
+	SEND_SOUND(src, sound('laplas/sounds/effects/save.ogg'))

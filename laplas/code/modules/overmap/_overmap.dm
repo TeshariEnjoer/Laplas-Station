@@ -13,7 +13,7 @@ GLOBAL_LIST_EMPTY(mathership_areas)
 	MT.keep_cached_map = TRUE
 	MT.load(ship_vlevel.get_unreserved_bottom_left_turf(), FALSE, TRUE)
 
-	INIT_ANNOUNCE("Initialized map [name] in [(REALTIMEOFDAY - load_start_time)/10] seconds!")
+	add_startup_message("Initialized map [name] in [(REALTIMEOFDAY - load_start_time)/10] seconds!")
 	return MT.cached_map
 
 /datum/controller/subsystem/overmap/proc/InitializeMathership()

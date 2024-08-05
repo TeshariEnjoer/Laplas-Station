@@ -101,8 +101,6 @@
 	setup_parts()
 	middle.add_overlay("activated")
 	update_list()
-	var/datum/map_zone/MZ = get_map_zone() //Laplas edit
-	MZ.gravity_generators += src
 
 //
 // Generator an admin can spawn

@@ -24,9 +24,9 @@
 	if(spc && living_player_count() >= spc)
 		to_chat(src, "<span class='notice'><b>Server Notice:</b>\n \t [CONFIG_GET(string/soft_popcap_message)]</span>")
 
-	sight |= SEE_TURFS
+//	sight |= SEE_TURFS Laplas removeval - fancy lobby
 
-	client.playtitlemusic()
+//	client.playtitlemusic() Laplas removeval - fancy lobby
 
 
 	// Check if user should be added to interview queue
@@ -38,7 +38,7 @@
 			register_for_interview()
 			return
 
-	new_player_panel()
+//	new_player_panel() Laplas removeval - fancy lobby
 	if(SSticker.current_state < GAME_STATE_SETTING_UP)
 		var/tl = SSticker.GetTimeLeft()
 		to_chat(src, "Please set up your character and select \"Ready\". The game will start [tl > 0 ? "in about [DisplayTimeText(tl)]" : "soon"].")

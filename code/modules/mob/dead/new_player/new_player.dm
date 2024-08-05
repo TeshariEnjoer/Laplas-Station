@@ -48,6 +48,9 @@
  * This proc generates the panel that opens to all newly joining players, allowing them to join, observe, view polls, view the current crew manifest, and open the character customization menu.
  */
 /mob/dead/new_player/proc/new_player_panel()
+	return update_title_screen()
+
+/* Laplas Removeval - fancy tittlescreen, laplas/modules/new_player
 	if(auth_check)
 		return
 
@@ -88,6 +91,7 @@
 	popup.set_window_options("can_close=0")
 	popup.set_content(output.Join())
 	popup.open(FALSE)
+*/
 
 /mob/dead/new_player/proc/playerpolls()
 	var/list/output = list()
@@ -123,7 +127,7 @@
 		if(QDELETED(src))
 			return
 		return output
-
+/* Laplas Removeval - fancy tittlescreen, laplas/modules/new_player
 /mob/dead/new_player/Topic(href, href_list[])
 	if(auth_check)
 		return
@@ -210,7 +214,7 @@
 	if(href_list["votepollref"])
 		var/datum/poll_question/poll = locate(href_list["votepollref"]) in GLOB.polls
 		vote_on_poll_handler(poll, href_list)
-
+*/
 //When you cop out of the round (NB: this HAS A SLEEP FOR PLAYER INPUT IN IT)
 /mob/dead/new_player/proc/make_me_an_observer()
 	if(auth_check)
@@ -228,7 +232,7 @@
 	if(QDELETED(src) || !src.client || this_is_like_playing_right != "Yes")
 		ready = PLAYER_NOT_READY
 		src << browse(null, "window=playersetup") //closes the player setup window
-		new_player_panel()
+		new_player_panel() //Laplas edit - fancy tittlescreen
 		return FALSE
 
 	var/mob/dead/observer/observer = new()
@@ -468,6 +472,7 @@
 
 
 /mob/dead/new_player/proc/close_spawn_windows()
+	hide_title_screen()
 
 	src << browse(null, "window=playersetup") //closes the player setup window
 	src << browse(null, "window=preferences") //closes job selection

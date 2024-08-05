@@ -21,12 +21,6 @@
 /obj/machinery/light/directional/south,
 /turf/open/floor/plasteel/dark,
 /area/ship/engineering/electrical)
-"aD" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
-/turf/open/floor/plasteel/dark,
-/area/ship/engineering/engine)
 "aF" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber/on/layer4{
 	dir = 1
@@ -61,16 +55,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/ship/maintenance/fore)
-"br" = (
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
-/obj/structure/catwalk/over/plated_catwalk/dark,
-/turf/open/floor/plating,
-/area/ship/hallway/fore)
 "by" = (
 /obj/effect/turf_decal/borderfloor/full,
 /obj/machinery/cryopod{
@@ -382,18 +366,6 @@
 "hK" = (
 /turf/open/space/basic,
 /area/ship/external/dark)
-"hQ" = (
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
-/obj/structure/catwalk/over/plated_catwalk/dark,
-/turf/open/floor/plating,
-/area/ship/engineering/electrical)
 "hV" = (
 /obj/structure/cable{
 	icon_state = "1-2"
@@ -653,19 +625,6 @@
 /obj/machinery/light/directional/north,
 /turf/open/floor/plasteel/dark,
 /area/ship/engineering)
-"nz" = (
-/obj/machinery/door/airlock/engineering{
-	name = "Engineering"
-	},
-/obj/structure/cable{
-	icon_state = "1-2"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer2,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer4,
-/obj/structure/catwalk/over/plated_catwalk/dark,
-/turf/open/floor/plating,
-/area/ship/construction)
 "nB" = (
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer2,
 /obj/structure/railing{
@@ -6163,9 +6122,9 @@ xB
 rJ
 bS
 bS
-hQ
+bS
 Ar
-nz
+cO
 Zv
 JK
 QM
@@ -6403,7 +6362,7 @@ se
 PN
 se
 Kl
-br
+se
 oq
 Vo
 UF
@@ -6510,7 +6469,7 @@ uc
 cv
 fK
 lq
-aD
+lq
 lq
 EU
 pB
