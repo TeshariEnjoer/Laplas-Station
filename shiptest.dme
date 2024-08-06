@@ -3503,8 +3503,6 @@
 #include "interface\menu.dm"
 #include "interface\stylesheet.dm"
 #include "interface\skin.dmf"
-#include "laplas\code\modules\areas\_area.dm"
-#include "laplas\code\modules\areas\overrides\machinery.dm"
 #include "laplas\code\modules\config\laplas_configs.dm"
 #include "laplas\code\modules\mapping\mathership_config.dm"
 #include "laplas\code\modules\mapping\SSmapping.dm"

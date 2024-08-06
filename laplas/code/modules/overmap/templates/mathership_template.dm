@@ -19,6 +19,8 @@
 	if(!data)
 		stack_trace("map config is not json: [mappath]")
 
+	if(istext(data["map_name"]))
+		name = data["map_name"]
 	file_name = data["map_path"]
 	if(istext(data["map_short_name"]))
 		short_name = data["map_short_name"]
