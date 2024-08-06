@@ -145,11 +145,11 @@
 
             .menu_button:active {
                 padding-left: 0px;
-                transform: translate(2px, 2px);
+                transform: translate(1px, 1px);
             }
 
             .menu_button:hover::before {
-                content: "☞";
+                content: ">";
                 text-align: center;
                 width: 5vmin;
                 display: inline-block;

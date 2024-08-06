@@ -48,7 +48,7 @@
  * This proc generates the panel that opens to all newly joining players, allowing them to join, observe, view polls, view the current crew manifest, and open the character customization menu.
  */
 /mob/dead/new_player/proc/new_player_panel()
-	return update_title_screen()
+	return show_title_screen()
 
 /* Laplas Removeval - fancy tittlescreen, laplas/modules/new_player
 	if(auth_check)

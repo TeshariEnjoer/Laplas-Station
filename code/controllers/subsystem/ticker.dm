@@ -163,6 +163,7 @@ SUBSYSTEM_DEF(ticker)
 			totalPlayersReady = 0
 			for(var/i in GLOB.new_player_list)
 				var/mob/dead/new_player/player = i
+				player.show_title_screen()		//Laplas edit - fancy tittlescreen
 				if(player.ready == PLAYER_READY_TO_PLAY)
 					++totalPlayersReady
 

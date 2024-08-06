@@ -52,9 +52,12 @@
 			dat += {"
 				<a class="menu_button" href='?src=[text_ref(src)];late_join=1'>JOIN GAME</a>
 				<a class="menu_button" href='?src=[text_ref(src)];view_manifest=1'>CREW MANIFEST</a>
-				<a class="menu_button" href='?src=[text_ref(src)];observe=1'>OBSERVE</a>
-				<a class="menu_button" href='?src=[text_ref(src)];character_setup=1'>SETUP CHARACTER (<span id="character_slot">[uppertext(client.prefs.real_name)]</span>)</a>
-				<a class="menu_button" href='?src=[text_ref(src)];game_options=1'>GAME OPTIONS</a>
+			"}
+
+		dat += {"
+			<a class="menu_button" href='?src=[text_ref(src)];observe=1'>OBSERVE</a>
+			<a class="menu_button" href='?src=[text_ref(src)];character_setup=1'>SETUP CHARACTER (<span id="character_slot">[uppertext(client.prefs.real_name)]</span>)</a>
+			<a class="menu_button" href='?src=[text_ref(src)];game_options=1'>GAME OPTIONS</a>
 			"}
 
 		dat += "</div>"
