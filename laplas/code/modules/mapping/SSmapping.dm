@@ -65,6 +65,7 @@ GLOBAL_LIST_INIT(virtual_levels, list())
 	var/list/areas_to_load = list()
 	for(var/L in turfs)
 		var/turf/B = L
+		B.virtual_z = map_level.id
 		areas_to_load |= B.loc
 		for(var/A in B)
 			atoms += A

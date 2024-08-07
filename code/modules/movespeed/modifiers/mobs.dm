@@ -45,7 +45,7 @@
 	variable = TRUE
 
 /datum/movespeed_modifier/config_walk_run
-	multiplicative_slowdown = 1
+	multiplicative_slowdown = 2.5
 	id = MOVESPEED_ID_MOB_WALK_RUN
 	flags = IGNORE_NOSLOW
 

@@ -211,6 +211,7 @@
 		update_mob_config_movespeeds()
 
 /datum/config_entry/number/movedelay/run_delay
+	config_entry_value = 2
 	integer = FALSE
 
 /datum/config_entry/number/movedelay/run_delay/ValidateAndSet()
@@ -219,6 +220,7 @@
 	M.sync()
 
 /datum/config_entry/number/movedelay/walk_delay
+	config_entry_value = 2.5
 	integer = FALSE
 
 /datum/config_entry/number/movedelay/walk_delay/ValidateAndSet()
