@@ -40,9 +40,6 @@ GLOBAL_LIST_INIT(virtual_levels, list())
 	var/datum/parsed_map/parsed = new(dmm_file)
 	if(!parsed.load(T.x, T.y, T.z, cropMap=FALSE, no_changeturf=(SSatoms.initialized == INITIALIZATION_INSSATOMS)))
 		CRASH("Map: [name], isn't loadet!")
-	for(var/thing in parsed.loaded_areas)
-		var/area/A = thing
-		map_level.add_area(A)
 
 
 	//Initialization atoms
@@ -65,8 +62,10 @@ GLOBAL_LIST_INIT(virtual_levels, list())
 			bounds[MAP_MAXZ]
 			)
 		)
+	var/list/areas_to_load = list()
 	for(var/L in turfs)
 		var/turf/B = L
+		areas_to_load |= B.loc
 		for(var/A in B)
 			atoms += A
 			if(istype(A, /obj/structure/cable))
@@ -75,9 +74,11 @@ GLOBAL_LIST_INIT(virtual_levels, list())
 			if(istype(A, /obj/machinery/atmospherics))
 				atmos_machines += A
 
-	SSmapping.reg_in_areas_in_z(parsed.loaded_areas)
-	SSatoms.Initialize(parsed.loaded_areas)
-	SSatoms.InitializeAtoms(turfs + atoms, null)
+	for(var/area/A as anything in areas_to_load)
+		map_level.add_area(A)
+
+	SSmapping.reg_in_areas_in_z(areas_to_load)
+	SSatoms.InitializeAtoms(areas_to_load + turfs + atoms, null)
 	SSmachines.setup_template_powernets(cables)
 	SSair.setup_template_machinery(atmos_machines)
 	add_startup_message("Loadet map: [name] in [(REALTIMEOFDAY - load_start_time)/10]")

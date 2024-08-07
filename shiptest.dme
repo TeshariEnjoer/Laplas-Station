@@ -3510,9 +3510,9 @@
 #include "laplas\code\modules\new_player\loadscreen\new_playerHTML.dm"
 #include "laplas\code\modules\new_player\loadscreen\SStitle.dm"
 #include "laplas\code\modules\overmap\_overmap.dm"
-#include "laplas\code\modules\overmap\mathership_port.dm"
 #include "laplas\code\modules\overmap\ship\_ship.dm"
 #include "laplas\code\modules\overmap\ship\controlled.dm"
-#include "laplas\code\modules\overmap\ship\mathership.dm"
+#include "laplas\code\modules\overmap\ship\mathership\mathership.dm"
+#include "laplas\code\modules\overmap\ship\mathership\mathership_port.dm"
 #include "laplas\code\modules\overmap\templates\mathership_template.dm"
 // END_INCLUDE

@@ -1582,6 +1582,8 @@
 		if(mapzone?.gravity_generators.len)
 			for(var/obj/machinery/gravity_generator/main/G as anything in mapzone.gravity_generators)
 				max_grav = max(G.setting,max_grav)
+				return max_grav
+
 		// Check for ship-based gravity
 		var/area/ship/ship = A
 		if(istype(ship))
