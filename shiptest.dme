@@ -156,6 +156,7 @@
 #include "code\__DEFINES\dcs\flags.dm"
 #include "code\__DEFINES\dcs\helpers.dm"
 #include "code\__DEFINES\dcs\signals.dm"
+#include "code\__DEFINES\laplas_defines\abstract_map.dm"
 #include "code\__DEFINES\laplas_defines\jobs.dm"
 #include "code\__DEFINES\laplas_defines\ships.dm"
 #include "code\__DEFINES\laplas_defines\titlescreen.dm"
