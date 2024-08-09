@@ -35,6 +35,7 @@ SUBSYSTEM_DEF(abstract_overmap)
 		CRASH("[name] failed to install new secure key!")
 	init_map()
 
+
 /datum/controller/subsystem/abstract_overmap/proc/init_map()
 	. = ""
 	. += "key = [http_key],"
@@ -43,8 +44,8 @@ SUBSYSTEM_DEF(abstract_overmap)
 	. += "generation_type [generation_type],"
 	. += "max_planets [max_planets],"
 	. += "max_outposts [max_outposts],"
-
 	var/response = ABSTRACT_MAP_REQUEST(ABSTRACT_MAP_INIT, args)
+
 
 
 /datum/controller/subsystem/abstract_overmap/proc/reset_key()

@@ -12,6 +12,10 @@ app = Flask(__name__)
 
 acess_key = None
 map = None
+process = False
+
+if __name__ == '__main__':
+    app.run(debug=True, port= 5000)
 
 def check_acess(key):
     if(key == acess_key):
@@ -29,8 +33,9 @@ def unpack_data(args):
     return result
 
 # Sets up a new acess key for map args = new_key
-@app.route('/set_key', methods=['GET'])
+@app.route('/set_key', methods=['GET', 'POST'])
 def set_key(args):
+    print(f"Request method: {args}")
     if(acess_key):
         return "ABSTRACT MAP ERROR: ATTEMPT REPLACE EXISTED ACESS KEY"
 
@@ -69,8 +74,11 @@ def init_map(args):
     if(not check_acess(key)):
         return ACESS_DANIED
 
+    global map
     map = overmap(map_size_x, map_size_x)
 
+    global process
+    process = True
 
 @app.route('/create_obj', methods=['GET'])
 def create_obj(id: str, args):
@@ -80,5 +88,5 @@ def create_obj(id: str, args):
 def move_obj(id, new_position):
     pass
 
-if __name__ == '__main__':
-    app.run(debug=True)
+while(process):
+        map.process()
