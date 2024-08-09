@@ -35,7 +35,6 @@ SUBSYSTEM_DEF(abstract_overmap)
 		CRASH("[name] failed to install new secure key!")
 	init_map()
 
-
 /datum/controller/subsystem/abstract_overmap/proc/init_map()
 	. = ""
 	. += "key = [http_key],"

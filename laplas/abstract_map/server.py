@@ -1,0 +1,146 @@
+import threading
+import pygame
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import urllib.parse
+import io
+
+SUCCESS = "success"
+FAILED = "failed"
+ERROR = "error"
+ACCESS_DENIED = "Access to map denied due to wrong key!"
+VISUAL = True
+
+acess_key = None
+map_instance = None
+process = True
+
+def handle_ping():
+    pass
+#    return 'PINGED'
+
+def handle_set_key(query):
+    global acess_key
+    key = urllib.parse.parse_qs(query).get('key', [''])[0].strip()
+    if acess_key:
+        return 'ABSTRACT MAP ERROR: ATTEMPT REPLACE EXISTED ACCESS KEY', 400
+    if not key:
+        return 'ABSTRACT MAP ERROR: ATTEMPT SET HTTP KEY WITH UNEXISTED STRING', 400
+    acess_key = key
+    return SUCCESS, 200
+
+def handle_reset_key(query):
+    global acess_key
+    key = urllib.parse.parse_qs(query).get('key', [''])[0].strip()
+    if key == acess_key:
+        acess_key = None
+        return SUCCESS, 200
+    return FAILED, 400
+
+def handle_init_map(query):
+    global map_instance
+    params = urllib.parse.parse_qs(query)
+    key = params.get('key', [''])[0]
+    size_x = int(params.get('size_x', ['1'])[0])
+    size_y = int(params.get('size_y', ['1'])[0])
+    if key != acess_key:
+        return ACCESS_DENIED, 403
+    map_instance = overmap(size_x, size_y, VISUAL)
+    return SUCCESS, 200
+
+def handle_create_obj(query):
+    return 'OBJECT CREATION PLACEHOLDER', 200
+
+def handle_move_obj(query):
+    return 'OBJECT MOVEMENT PLACEHOLDER', 200
+
+# Роутер запросов
+ROUTES = {
+    '/': {
+        'GET': handle_ping,
+        'POST': handle_ping
+    },
+    '/set_key': {
+        'GET': handle_set_key,
+        'POST': handle_set_key
+    },
+    '/reset_key': {
+        'GET': handle_reset_key,
+        'POST': handle_reset_key
+    },
+    '/init_map': {
+        'GET': handle_init_map,
+        'POST': handle_init_map
+    },
+    '/create_obj': {
+        'GET': handle_create_obj,
+        'POST': handle_create_obj
+    },
+    '/move_obj': {
+        'GET': handle_move_obj,
+        'POST': handle_move_obj
+    }
+}
+
+class RequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.handle_request(self.path, self.command, self.rfile, self.headers)
+
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length).decode()
+        self.handle_request(self.path, 'POST', io.StringIO(post_data), self.headers)
+
+    def handle_request(self, path, method, data_source, headers):
+        route = ROUTES.get(path)
+        if route:
+            handler = route.get(method)
+            if handler:
+                if method == 'POST':
+                    query = data_source.getvalue()
+                else:
+                    query = urllib.parse.urlparse(path).query
+
+                response, status_code = handler(query)
+                self.send_response(status_code)
+                self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(response.encode())
+                return
+
+        self.send_response(404)
+        self.send_header('Content-type', 'text/plain')
+        self.end_headers()
+        self.wfile.write(b'Not Found')
+
+def run_http_server():
+    server_address = ("127.0.0.1", 5000)
+    print(f"Running on: http://{server_address[0]}:{server_address[1]}/")
+    httpd = HTTPServer(server_address, RequestHandler)
+    print("Starting HTTP server")
+    httpd.serve_forever()
+
+from overmap import overmap
+
+def game_loop():
+    global process
+    pygame.init()
+    map_instance = overmap(1000, 1000, True)
+
+    while process:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                process = False
+                pygame.quit()
+                break
+
+        if map_instance:
+            map_instance.process()
+
+        pygame.display.flip()
+        pygame.time.wait(10)
+
+if __name__ == '__main__':
+    game_thread = threading.Thread(target=game_loop)
+    game_thread.start()
+
+    run_http_server()
