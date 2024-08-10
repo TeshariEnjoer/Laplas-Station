@@ -1,46 +1,51 @@
 import pygame
+from objects.processing import processing
+import colors
 
-class camera:
-    def __init__(self, screen, surface, new_x, new_y) -> None:
-        self.width = 800
-        self.height = 600
+class overmap_view (processing):
+
+    def __init__(self, screen, surface, new_x, new_y, width, height) -> None:
+        super().__init__()
+
+
+        self.width = width
+        self.height = height
+
+
         self.dragging = False
         self.last_mouse_x = 0
         self.last_mouse_y = 0
-
         self.x = new_x
         self.y = new_y
 
         self.screen = screen
         self.render_surface = surface
-        self.camera_rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-        print(f"Camera initialized at ({self.x}, {self.y})")  # Отладочный вывод
+        self.camera_view = pygame.Rect(self.x, self.y, self.width, self.height)
+        print(f"Camera initialized at ({self.x}, {self.y})")
 
-    def process(self):
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    self.dragging = True
-                    self.last_mouse_x, self.last_mouse_y = event.pos
-                    print(f"Started dragging at ({self.last_mouse_x}, {self.last_mouse_y})")
+    def __process__(self):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        mouse_buttons = pygame.mouse.get_pressed()
 
-            if event.type == pygame.MOUSEBUTTONUP:
-                if event.button == 1:
-                    self.dragging = False
-                    print("Stopped dragging")
+        if mouse_buttons[0]:
+            if not self.dragging:
+                # Начало перетаскивания
+                self.dragging = True
+                self.last_mouse_x = mouse_x
+                self.last_mouse_y = mouse_y
+            else:
+                dx = mouse_x - self.last_mouse_x
+                dy = mouse_y - self.last_mouse_y
 
-            if event.type == pygame.MOUSEMOTION:
-                if self.dragging:
-                    mouse_x, mouse_y = event.pos
-                    dx = mouse_x - self.last_mouse_x
-                    dy = mouse_y - self.last_mouse_y
-                    self.x -= dx
-                    self.y -= dy
-                    self.last_mouse_x, self.last_mouse_y = mouse_x, mouse_y
+                self.camera_view.x -= dx
+                self.camera_view.y -= dy
 
-                    print(f"Dragging to ({self.x}, {self.y})")
+                self.last_mouse_x = mouse_x
+                self.last_mouse_y = mouse_y
+        else:
+            self.dragging = False
 
-        self.camera_rect.topleft = (self.x, self.y)
-        self.screen.blit(self.render_surface, (0, 0), self.camera_rect)
-        print(f"Camera rect top-left at ({self.camera_rect.x}, {self.camera_rect.y})")  # Отладочный вывод
+    def __update__(self):
+        self.screen.fill((0, 0, 0))
+        self.screen.blit(self.render_surface, (0, 0), self.camera_view)

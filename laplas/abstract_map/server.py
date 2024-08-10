@@ -3,6 +3,7 @@ import pygame
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 import io
+import config
 
 SUCCESS = "success"
 FAILED = "failed"
@@ -10,13 +11,16 @@ ERROR = "error"
 ACCESS_DENIED = "Access to map denied due to wrong key!"
 VISUAL = True
 
-acess_key = None
-map_instance = None
-process = True
+from overmap import overmap
 
-def handle_ping():
-    pass
-#    return 'PINGED'
+# Important globals
+acess_key = None
+map_instance = overmap
+process = True
+httpd = HTTPServer
+
+def handle_ping(query):
+    return SUCCESS, 200
 
 def handle_set_key(query):
     global acess_key
@@ -30,6 +34,7 @@ def handle_set_key(query):
 
 def handle_reset_key(query):
     global acess_key
+
     key = urllib.parse.parse_qs(query).get('key', [''])[0].strip()
     if key == acess_key:
         acess_key = None
@@ -53,7 +58,6 @@ def handle_create_obj(query):
 def handle_move_obj(query):
     return 'OBJECT MOVEMENT PLACEHOLDER', 200
 
-# Роутер запросов
 ROUTES = {
     '/': {
         'GET': handle_ping,
@@ -91,14 +95,15 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.handle_request(self.path, 'POST', io.StringIO(post_data), self.headers)
 
     def handle_request(self, path, method, data_source, headers):
-        route = ROUTES.get(path)
+        parsed_path = urllib.parse.urlparse(path)
+        route = ROUTES.get(parsed_path.path)
         if route:
             handler = route.get(method)
             if handler:
                 if method == 'POST':
                     query = data_source.getvalue()
                 else:
-                    query = urllib.parse.urlparse(path).query
+                    query = parsed_path.query
 
                 response, status_code = handler(query)
                 self.send_response(status_code)
@@ -110,34 +115,49 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_response(404)
         self.send_header('Content-type', 'text/plain')
         self.end_headers()
-        self.wfile.write(b'Not Found')
+        self.wfile.write(b'Function not found!')
 
 def run_http_server():
+    global httpd
     server_address = ("127.0.0.1", 5000)
     print(f"Running on: http://{server_address[0]}:{server_address[1]}/")
     httpd = HTTPServer(server_address, RequestHandler)
+
     print("Starting HTTP server")
     httpd.serve_forever()
 
-from overmap import overmap
+import globals
 
 def game_loop():
+    print("Initializing overmap")
     global process
     pygame.init()
-    map_instance = overmap(1000, 1000, True)
+    pygame.font.init()
+
+    clock = pygame.time.Clock()
+    map_instance = overmap(10000, 10000, True)
+    pygame.display.set_caption("Overmap")
+    print("Initialization complete")
 
     while process:
+        clock.tick(config.FPS)
+
+        # First get input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 process = False
                 pygame.quit()
                 break
 
-        if map_instance:
-            map_instance.process()
+        # Main processing loop
+        for obj in globals.PROCESSING_OBJECTS:
+            obj.__process__() # Updating physics, controls and e.t.c
+            obj.__update__() # updating grapthics and e.t.c
 
-        pygame.display.flip()
-        pygame.time.wait(10)
+        pygame.display.update()
+        pygame.time.wait(5)
+
+    pygame.exit()
 
 if __name__ == '__main__':
     game_thread = threading.Thread(target=game_loop)
