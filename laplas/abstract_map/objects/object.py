@@ -1,10 +1,16 @@
 import pygame
 import os
-from objects.processing import processing
+from objects.processing import Iprocessing, Ivisualised
+import math
 
-class object (processing):
+class object (Iprocessing, Ivisualised, pygame.sprite.Sprite):
+    MINIMUM_SPEED = 0.5
+    MAXIMUM_SPEED = 5
+
     def __init__(self, name, id, map, x, y, width, height, iconpath = "assets/obj.png"):
-        super().__init__()
+        Iprocessing.__init__(self)
+        Ivisualised.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
 
         self.name = name
         self.id = id
@@ -25,6 +31,11 @@ class object (processing):
         print(f"Created new object {self.name}, with id {self.id}, with icon {self.iconpath}, on {self.x}: {self.y}")
         # Physical params:
 
+        # Should we process physics parametrs
+        self.static = False
+        # Once how many ticks this object is allowed to move
+        self.movement_colldown = 60
+        self.movement_tick = 0
         # Our current velocity.
         self.velocity = pygame.Vector2(0, 0)
         # A temporary acceleration that we get.
@@ -56,6 +67,20 @@ class object (processing):
 
         self.image = pygame.image.load(final_path)
         self.original_texture = self.image.copy()
+        self.image = pygame.transform.scale(self.original_texture, (self.rect.width, self.rect.height))
+
+    def set_DMdatum(self, datum: str):
+        self.DM_datum = datum
+
+    def get_summary(self) -> str:
+        summary += ""
+        summary += f"id={self.id},"
+        summary += f"name={self.name},"
+        summary += f"x={self.x},"
+        summary += f"y={self.y},"
+        summary += f"angle={self.angle}"
+        summary += f"rotatation={self.rotation_speed}"
+        return summary
 
     def set_color(self, color):
         self.image.fill(color)
@@ -65,6 +90,11 @@ class object (processing):
         self.gsource = gsource
         self.gforce = gforce
 
+    def set_mass(self, new_mass):
+        if new_mass <= 0:
+            self.mass = 1
+            return
+        self.mass = new_mass
 
     def apply_force(self, force: pygame.Vector2):
         self.acceleration += force / self.mass
@@ -79,20 +109,30 @@ class object (processing):
         direction = pygame.Vector2(1, 0).rotate(self.angle)
         self.apply_force(-direction * brake_force)
 
-    def rotate(self, force):
-        pass
-
     def set_rotation(self, force):
-        pass
+        self.angle += force
 
-    def draw_id(self):
+    def rotate(self, force):
+        self.rotation_speed += force
+
+    def limit_velocity(self):
+        if self.velocity.length() > self.MAXIMUM_SPEED:
+            self.velocity.scale_to_length(self.MAXIMUM_SPEED)
+
+    def draw_id(self, surface):
         text = f"{self.name}: {self.id} "
         text += f"X: {self.x}, Y:{self.y}"
         text_surface = self.font.render(text, True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=(self.rect.centerx, self.rect.bottom + 10))
-        self.map.blit(text_surface, text_rect)
+        surface.blit(text_surface, text_rect)
 
     def __process__(self):
+        if self.static:
+            return
+
+        while self.movement_tick < self.movement_colldown:
+            self.movement_tick += 1
+
         if self.gsource:
             distance = pygame.Vector2(self.gsource.rect.center) - pygame.Vector2(self.rect.center)
             distance_length = distance.length()
@@ -101,27 +141,52 @@ class object (processing):
                 gravitational_acceleration = gravitational_force * distance.normalize()
                 self.apply_force(gravitational_acceleration)
 
+        if(self.rotation_speed):
+            self.angle += self.rotation_speed
 
-        self.velocity += self.acceleration
-        self.rect.center += self.velocity
+        angle_radians = math.radians(self.angle)
+        acceleration_rotated = pygame.Vector2(self.acceleration.x * math.cos(angle_radians) - self.acceleration.y * math.sin(angle_radians),
+                                               self.acceleration.x * math.sin(angle_radians) + self.acceleration.y * math.cos(angle_radians))
+        self.velocity += acceleration_rotated
         self.acceleration = pygame.Vector2(0, 0)
 
         self.angle %= 360
         self.image = pygame.transform.rotate(self.original_texture, -self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
-        self.x = self.velocity.x
-        self.y = self.velocity.y
+        self.limit_velocity()
+
+        self.x = self.rect.x
+        self.y = self.rect.y
         # Actually move
         self.rect.move_ip(self.velocity)
+        self.movement_tick = 0
 
-    def __update__(self):
-        self.draw_id()
-        self.map.blit(self.image, (self.x, self.y))
+    def __update__(self, surface: pygame.Surface):
+        if super().__draw__(self.rect):
+            self.draw_id(surface)
+            surface.blit(self.image, self.rect)
 
-def spawn_object(name: str, id: int, map: pygame.surface, new_x: int, new_y: int, width: int, height: int, iconpath):
+def spawn_object(name: str, id: int, map, new_x: int, new_y: int, width: int, height: int, iconpath):
     new_obj = object(name, id, map, new_x, new_y, width, height, iconpath)
     return new_obj
 
 def remove_object(obj: object):
     obj.destroy()
+
+
+class IgravitationWell:
+    def __init__(self) -> None:
+        self.G = 1
+        self.gravitation_radius = 0
+        self.orbiting_objects = list()
+        pass
+
+    def __gravityCapture__(self):
+        pass
+
+    def set_stable_orbit(self, object):
+        pass
+
+    def can_escape(self, object):
+        pass

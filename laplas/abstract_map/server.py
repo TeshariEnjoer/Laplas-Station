@@ -152,10 +152,12 @@ def game_loop():
         # Main processing loop
         for obj in globals.PROCESSING_OBJECTS:
             obj.__process__() # Updating physics, controls and e.t.c
-            obj.__update__() # updating grapthics and e.t.c
+        if(globals.VISUALISED):
+            globals.CAMERA.draw()
+            globals.CAMERA.__process__()
 
-        pygame.display.update()
-        pygame.time.wait(5)
+        pygame.display.flip()
+        pygame.time.wait(10)
 
     pygame.exit()
 

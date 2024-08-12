@@ -11,7 +11,7 @@
 #define AM_RESPONSE_SUCESS "sucess"
 #define AM_RESPONSE_FAILED	"failed"
 
-
+#define ABSTRACT_MAP_PING "/"
 #define ABSTRACT_MAP_SET_KEY "set_key"
 #define ABSTRACT_MAP_RESET_KEY "reset_key"
 #define ABSTRACT_MAP_INIT "init"

@@ -31,9 +31,16 @@ SUBSYSTEM_DEF(abstract_overmap)
 
 /datum/controller/subsystem/abstract_overmap/Initialize(start_timeofday)
 	. = ..()
+	ping()
 	if(!generate_secure_key())
 		CRASH("[name] failed to install new secure key!")
-	init_map()
+//	init_map()
+
+//Pings the overmap server
+/datum/controller/subsystem/abstract_overmap/proc/ping()
+	var/response = ABSTRACT_MAP_REQUEST(ABSTRACT_MAP_PING, "")
+	if(response == AM_RESPONSE_SUCESS)
+		message_admins("Abstarct map online")
 
 /datum/controller/subsystem/abstract_overmap/proc/init_map()
 	. = ""
