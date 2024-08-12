@@ -42,8 +42,8 @@ class overmap (Iprocessing, Ivisualised):
         spawn_gsource("Planet", "001", self, 5500, 5500, 128, 128, "assets/planet.png", 50, 600, 400)
         new_obj = self.create_object("Ship", "01", 5100, 5100, "assets/ship.png", 32, 32)
         new_obj.set_mass(10)
-        new_obj.set_rotation(30)
-        new_obj.apply_thrust(30)
+        new_obj.set_rotation(25)
+        new_obj.apply_thrust(60)
         return True
 
     ## Function for manipulate with objects

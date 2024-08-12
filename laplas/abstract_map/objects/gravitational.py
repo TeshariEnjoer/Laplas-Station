@@ -33,22 +33,24 @@ class grivitational_oject (object, IgravitationWell):
         dy = obj.rect.centery - self.rect.centery
         distance = math.sqrt(dx**2 + dy**2)
 
-        if distance == 1e-6:
-            print(f"Ojbect {obj.name} - {obj.id}, crashed intro {self.name} - {self.id}")
+        if distance < self.rect.width:
             return
 
         velocity_magnitude = math.sqrt(self.G * self.mass / distance)
 
-        if distance < self.critical_orbit:
+        if distance <= self.critical_orbit:
             angle = math.atan2(dy, dx)
             velocity_x = -velocity_magnitude * math.sin(angle)
             velocity_y = velocity_magnitude * math.cos(angle)
-            obj.velocity = pygame.math.Vector2(velocity_x, velocity_y)
-#        elif self.can_escape(obj):
-#            # Apply acceleration towards the gravitational source
-#            direction = pygame.math.Vector2(-dx, -dy).normalize()
-#            acceleration = self.G / obj.mass
-#            obj.apply_force(direction * acceleration)
+
+            obj.apply_force(pygame.math.Vector2(velocity_x, velocity_y))
+
+        elif self.can_escape(obj):
+            # Apply acceleration towards the gravitational source
+            direction = pygame.math.Vector2(-dx, -dy).normalize()
+            acceleration = self.G / obj.mass
+            obj.apply_force(direction * acceleration)
+            obj.gsource = None #Escaping from us with addictional speed from gravitational manevr
 
     def can_escape(self, object : object) -> bool:
         if(globals.get_speed(object) > self.G):
