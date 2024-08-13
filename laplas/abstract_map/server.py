@@ -19,6 +19,15 @@ map_instance = overmap
 process = True
 httpd = HTTPServer
 
+def check_access(key):
+    global acess_key
+    if key == acess_key:
+        return True
+    return False
+
+def get_param(params, name, default=''):
+    return params.get(name, [default])[0]
+
 def handle_ping(query):
     return SUCCESS, 200
 
@@ -53,7 +62,40 @@ def handle_init_map(query):
     return SUCCESS, 200
 
 def handle_create_obj(query):
-    return 'OBJECT CREATION PLACEHOLDER', 200
+    global map_instance
+
+    if not map_instance:
+        return FAILED, 400
+
+    params = urllib.parse.parse_qs(query)
+    key = get_param(params, 'key', '')
+
+    if not check_access(key):
+        return ACCESS_DENIED, 403
+
+    name = get_param(params, 'name', 'undefined')
+    id = get_param(params, 'id', '0')
+    new_x = int(get_param(params, 'x', 1000))
+    new_y = int(get_param(params, 'y', 1000))
+    width = int(get_param(params, 'width', 32))
+    height = int(get_param(params, 'height', 32))
+    class_type = get_param(params, 'class_type', 'object')
+    texture_path = get_param(params, 'texture_path', 'assets/object.png')
+    if class_type == 'object' or not class_type or class_type == '':
+        result = map_instance.create_object(
+            name=name,
+            id=id,
+            x=new_x,
+            y=new_y,
+            path=texture_path,
+            width=width,
+            height=height,
+        )
+        return result, 200
+    if class_type == 'grivitational_oject' :
+        pass
+
+    return result, 200
 
 def handle_move_obj(query):
     return 'OBJECT MOVEMENT PLACEHOLDER', 200
@@ -135,7 +177,7 @@ def game_loop():
     pygame.font.init()
 
     clock = pygame.time.Clock()
-    map_instance = overmap(10000, 10000, True)
+    map_instance = overmap(50000, 50000, True)
     pygame.display.set_caption("Overmap")
     print("Initialization complete")
 

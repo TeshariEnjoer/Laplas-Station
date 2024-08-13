@@ -43,14 +43,17 @@ class overmap (Iprocessing, Ivisualised):
         new_obj = self.create_object("Ship", "01", 5100, 5100, "assets/ship.png", 32, 32)
         new_obj.set_mass(10)
         new_obj.set_rotation(25)
-        new_obj.apply_thrust(60)
+        new_obj.apply_thrust(15)
         return True
 
     ## Function for manipulate with objects
     def create_object(self, name, id, x, y, path, width, height):
-        new_obj = spawn_object(name, id, self, x, y, width, height, path)
-        self.all_objects[id] = new_obj
-        return new_obj
+        try:
+            new_obj = spawn_object(name, id, self, x, y, width, height, path)
+            self.all_objects[id] = new_obj
+            return new_obj
+        except:
+            return False
 
     def create_ship():
         pass
