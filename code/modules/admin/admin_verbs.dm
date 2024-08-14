@@ -132,7 +132,8 @@ GLOBAL_LIST_INIT(admin_verbs_spawn, list(
 	/datum/admins/proc/beaker_panel,
 	/datum/admins/proc/gift,
 	/client/proc/spawn_ruin,
-	/client/proc/spawn_outpost /* Allows admins to spawn a new outpost. */
+	/client/proc/spawn_outpost, /* Allows admins to spawn a new outpost. */
+	/client/proc/spawn_overmap_object /* Allows admins to spawn a new overmap object. */
 	))
 GLOBAL_PROTECT(admin_verbs_spawn)
 GLOBAL_LIST_INIT(admin_verbs_server, world.AVerbsServer())

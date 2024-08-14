@@ -8,7 +8,7 @@ import config
 SUCCESS = "success"
 FAILED = "failed"
 ERROR = "error"
-ACCESS_DENIED = "Access to map denied due to wrong key!"
+ACCESS_DENIED = "Access to map denied due the wrong key!"
 VISUAL = True
 
 from overmap import overmap
@@ -21,6 +21,11 @@ httpd = HTTPServer
 
 def check_access(key):
     global acess_key
+
+    if not acess_key:
+        acess_key = key
+        print(f'New access key for overmap applied: {acess_key}')
+
     if key == acess_key:
         return True
     return False
@@ -39,6 +44,7 @@ def handle_set_key(query):
     if not key:
         return 'ABSTRACT MAP ERROR: ATTEMPT SET HTTP KEY WITH UNEXISTED STRING', 400
     acess_key = key
+    print(f'New access key for overmap applied: {acess_key}')
     return SUCCESS, 200
 
 def handle_reset_key(query):
@@ -65,7 +71,7 @@ def handle_create_obj(query):
     global map_instance
 
     if not map_instance:
-        return FAILED, 400
+        return 'Trying spawn object while no active map instance', 400
 
     params = urllib.parse.parse_qs(query)
     key = get_param(params, 'key', '')
@@ -81,24 +87,74 @@ def handle_create_obj(query):
     height = int(get_param(params, 'height', 32))
     class_type = get_param(params, 'class_type', 'object')
     texture_path = get_param(params, 'texture_path', 'assets/object.png')
-    if class_type == 'object' or not class_type or class_type == '':
-        result = map_instance.create_object(
-            name=name,
-            id=id,
-            x=new_x,
-            y=new_y,
-            path=texture_path,
-            width=width,
-            height=height,
-        )
-        return result, 200
+
+    if class_type == 'object' or not class_type:
+        try:
+            map_instance.create_object(
+                name=name,
+                id=id,
+                x=new_x,
+                y=new_y,
+                path=texture_path,
+                width=width,
+                height=height,
+            )
+        finally:
+            print(f'Trying to spawn object with data: {name}, {id}, {new_x}, {new_y}, {width}, {height}, {class_type}, {texture_path}')
+            return f'Failed to spawn new object: {name} - {id}', 403
     if class_type == 'grivitational_oject' :
         pass
 
-    return result, 200
 
-def handle_move_obj(query):
-    return 'OBJECT MOVEMENT PLACEHOLDER', 200
+def handle_object_movement(query):
+    params = urllib.parse.parse_qs(query)
+    if(not check_access(get_param(params, 'key', ''))):
+        return ACCESS_DENIED, 403
+    global map_instance
+    id = get_param(params, 'id', '')
+    obj = map_instance.all_objects[id]
+    if(not obj):
+        return f'Trying get object with unexisted id, {id}', 400
+    move_type = get_param(params, 'move_type', '')
+    new_value = get_param(params, 'value', '')
+    return_value = ''
+
+    if(move_type == 'thrust'):
+        obj.apply_thrust(new_value)
+        return f'{obj.speed}', 200
+
+    elif(move_type == 'set_rotation'):
+        obj.set_rotation(new_value)
+        return f'{obj.angle}', 200
+
+    elif(move_type == 'apply_rotation'):
+        obj.rotate(new_value)
+        return f'{obj.rotation_speed}', 200
+
+    elif(move_type == 'brake'):
+        obj.apply_brake(new_value)
+        return f'{obj.speed}', 200
+
+    return f'Get ivalid move_type, while trying move object with id {obj.id}', 400
+
+def handle_sync(query):
+    params = urllib.parse.parse_qs(query)
+    if(not check_access(get_param(params, 'key', ''))):
+        return ACCESS_DENIED, 403
+    global map_instance
+    id = get_param(params, 'id', '')
+    obj = map_instance.all_objects[id]
+    if(not obj):
+        return f'Trying get object with unexisted id, {id}', 400
+
+    data = ''
+    data += f'speed = {obj.speed}'
+    data += f'angle = {obj.angle}'
+    data += f'rotation_speed = {obj.rotation_speed}'
+    data += f'x = {obj.x}'
+    data += f'y = {obj.y}'
+    return data, 200
+
 
 ROUTES = {
     '/': {
@@ -122,8 +178,8 @@ ROUTES = {
         'POST': handle_create_obj
     },
     '/move_obj': {
-        'GET': handle_move_obj,
-        'POST': handle_move_obj
+        'GET': handle_object_movement,
+        'POST': handle_object_movement
     }
 }
 
@@ -169,15 +225,20 @@ def run_http_server():
     httpd.serve_forever()
 
 import globals
+import os
+import ctypes
 
 def game_loop():
     print("Initializing overmap")
     global process
+#    ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+#    os.environ['SDL_VIDEODRIVER'] = 'dummy'
     pygame.init()
     pygame.font.init()
+    global map_instance
 
     clock = pygame.time.Clock()
-    map_instance = overmap(50000, 50000, True)
+    map_instance = overmap(5000, 5000, True)
     pygame.display.set_caption("Overmap")
     print("Initialization complete")
 

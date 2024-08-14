@@ -1,1 +1,1 @@
-/datum/abstract_object/gravitational
+/datum/overmap_object/gravitational

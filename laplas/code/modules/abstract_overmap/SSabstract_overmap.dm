@@ -1,7 +1,7 @@
 SUBSYSTEM_DEF(abstract_overmap)
 	name = "Abstract overmap"
 	wait = 3 SECONDS
-	init_order = INIT_ORDER_OVERMAP
+	init_order = -26
 	flags = SS_KEEP_TIMING|SS_NO_TICK_CHECK
 
 	/// Map hidth in kilometrs.
@@ -19,15 +19,19 @@ SUBSYSTEM_DEF(abstract_overmap)
 	VAR_PROTECTED/http_key = null
 
 	///List of all overmap objects.
-	VAR_PRIVATE/list/overmap_objects = list()
+	var/list/overmap_objects = list()
 	///List of all simulated ships. All ships in this list are fully initialized.
-	VAR_PRIVATE/list/controlled_ships = list()
+	var/list/controlled_ships = list()
 	///List of spawned outposts. The default spawn location is the first index.
-	VAR_PRIVATE/list/stations = list()
+	var/list/stations = list()
 
 	var/map_server_status = MAP_SERVER_STATUS_DISABLED
 	///Path to server main script
 	var/main_path
+
+	var/last_claimed_id = "obj-0"
+	var/last_claimed_id_number = 0
+	var/last_unclaimed_id = 0
 
 /datum/controller/subsystem/abstract_overmap/Initialize(start_timeofday)
 	. = ..()
@@ -36,9 +40,13 @@ SUBSYSTEM_DEF(abstract_overmap)
 	add_startup_message("Abstract map server online - begining initialization!")
 	if(!generate_secure_key())
 		CRASH("[name] failed to install new secure key!")
-		return
 
-	init_map()
+//	init_map()
+
+/datum/controller/subsystem/abstract_overmap/fire(resumed)
+	for(var/datum/overmap_object/OB in overmap_objects)
+		if(!OB.is_static && OB.get_speed() > 0)
+			INVOKE_ASYNC(OB, TYPE_PROC_REF(/datum/overmap_object, sync))
 
 //Pings the overmap server
 /datum/controller/subsystem/abstract_overmap/proc/ping()
@@ -46,7 +54,6 @@ SUBSYSTEM_DEF(abstract_overmap)
 	if(response == AM_RESPONSE_SUCESS)
 		message_admins("Abstarct map online")
 
-/datum/overmap
 
 /datum/controller/subsystem/abstract_overmap/proc/init_map()
 	. = ""
@@ -59,16 +66,21 @@ SUBSYSTEM_DEF(abstract_overmap)
 
 
 /datum/controller/subsystem/abstract_overmap/proc/reset_key()
-	var/response = ABSTRACT_MAP_REQUEST(ABSTRACT_MAP_RESET_KEY, "")
+	var/response = abstract_map_request(ABSTRACT_MAP_RESET_KEY, "")
 	if(response == AM_RESPONSE_SUCESS)
 		return TRUE
 
 /datum/controller/subsystem/abstract_overmap/proc/abstract_map_request(function, data)
+	set waitfor = FALSE
+
 	var/datum/http_request/request = new()
 	request.prepare(RUSTG_HTTP_METHOD_GET, DEFAULT_ABSTRACT_MAP_URL + function , "[http_key]," + data, list("Accept" = "text/plain"))
 	request.begin_async()
 	UNTIL(request.is_complete())
+
 	var/datum/http_response/response = request.into_response()
+	if(response.status_code != 200)
+		CRASH(response.body)
 	qdel(request)
 	return response.body
 
@@ -84,7 +96,15 @@ SUBSYSTEM_DEF(abstract_overmap)
 	CRASH(response)
 
 /datum/controller/subsystem/abstract_overmap/proc/get_last_unclaimed_id()
-
+	var/check_id = last_claimed_id
+	if(check_id in overmap_objects[last_unclaimed_id])
+		var/finding = TRUE
+		while(finding)
+			last_claimed_id_number += 1
+			check_id = "obj-[last_claimed_id_number]"
+			if(!(check_id in overmap_objects))
+				finding = FALSE
+	return check_id
 
 /datum/controller/subsystem/abstract_overmap/proc/get_random_overmap_position(center_offset)
 	var/list/position
@@ -95,22 +115,22 @@ SUBSYSTEM_DEF(abstract_overmap)
 	)
 	return position
 
-/datum/controller/subsystem/abstract_overmap/proc/spawn_overmap_object(datum/abstract_object/new_object, x, y)
+/datum/controller/subsystem/abstract_overmap/proc/spawn_overmap_object(datum/overmap_object/new_object, x, y)
 	. = ""
-	. += "name = [abstract_object.name],"
-	. += "id = [abstract_object.id],"
+	. += "name = [new_object.name],"
+	. += "id = [new_object.id],"
 	. += "x = [x],"
 	. += "y = [y],"
-	. += new_object.get_type_data()
+	. += "texture_path = [new_object.overmap_texture_path],"
+	. += "class_type = [new_object.class_type],"
+	. += "width = [new_object.width],"
+	. += "height = [new_object.height],"
 	var/response = abstract_map_request(ABSTRACT_MAP_SPAWN_OBJECT, .)
-	if(!response == AM_RESPONSE_SUCESS)
-		log_world("Failed to spawn object [new_object.name] on overmap, response [response]")
+	if(!response)
 		return FALSE
-	overmap_objects["[new_obje.id]"] = new_obje
+
+	overmap_objects[new_object.id] = new_object
 	return TRUE
 
 /datum/controller/subsystem/abstract_overmap/proc/remove_overmap_object(id)
 	return abstract_map_request(ABSTRACT_MAP_REMOVE_OBJECT, "[id]")
-
-
-
