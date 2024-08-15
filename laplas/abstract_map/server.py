@@ -73,15 +73,15 @@ def handle_create_obj(query):
     if not map_instance:
         return 'Trying spawn object while no active map instance', 400
 
+    print(f"{query}")
     params = urllib.parse.parse_qs(query)
-    key = get_param(params, 'key', '')
-
-    if not check_access(key):
-        return ACCESS_DENIED, 403
-
+    print(f"{params}")
     name = get_param(params, 'name', 'undefined')
+    print(name)
     id = get_param(params, 'id', '0')
+    print(id)
     new_x = int(get_param(params, 'x', 1000))
+    print(new_x)
     new_y = int(get_param(params, 'y', 1000))
     width = int(get_param(params, 'width', 32))
     height = int(get_param(params, 'height', 32))
@@ -108,8 +108,6 @@ def handle_create_obj(query):
 
 def handle_object_movement(query):
     params = urllib.parse.parse_qs(query)
-    if(not check_access(get_param(params, 'key', ''))):
-        return ACCESS_DENIED, 403
     global map_instance
     id = get_param(params, 'id', '')
     obj = map_instance.all_objects[id]

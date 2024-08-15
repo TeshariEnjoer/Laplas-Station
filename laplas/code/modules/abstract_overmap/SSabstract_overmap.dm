@@ -38,8 +38,6 @@ SUBSYSTEM_DEF(abstract_overmap)
 	if(!ping())
 		return
 	add_startup_message("Abstract map server online - begining initialization!")
-	if(!generate_secure_key())
-		CRASH("[name] failed to install new secure key!")
 
 //	init_map()
 
@@ -70,11 +68,11 @@ SUBSYSTEM_DEF(abstract_overmap)
 	if(response == AM_RESPONSE_SUCESS)
 		return TRUE
 
-/datum/controller/subsystem/abstract_overmap/proc/abstract_map_request(function, data)
+/datum/controller/subsystem/abstract_overmap/proc/abstract_map_request(function, data, method = RUSTG_HTTP_METHOD_GET)
 	set waitfor = FALSE
 
 	var/datum/http_request/request = new()
-	request.prepare(RUSTG_HTTP_METHOD_GET, DEFAULT_ABSTRACT_MAP_URL + function , "[http_key]," + data, list("Accept" = "text/plain"))
+	request.prepare(method, DEFAULT_ABSTRACT_MAP_URL + function , data, list("Accept" = "text/plain"))
 	request.begin_async()
 	UNTIL(request.is_complete())
 
@@ -116,16 +114,16 @@ SUBSYSTEM_DEF(abstract_overmap)
 	return position
 
 /datum/controller/subsystem/abstract_overmap/proc/spawn_overmap_object(datum/overmap_object/new_object, x, y)
-	. = ""
-	. += "name = [new_object.name],"
-	. += "id = [new_object.id],"
-	. += "x = [x],"
-	. += "y = [y],"
-	. += "texture_path = [new_object.overmap_texture_path],"
-	. += "class_type = [new_object.class_type],"
-	. += "width = [new_object.width],"
-	. += "height = [new_object.height],"
-	var/response = abstract_map_request(ABSTRACT_MAP_SPAWN_OBJECT, .)
+	var/data = "object:"
+	data += "name = [new_object.name],"
+	data += "id = [new_object.id],"
+	data += "x = [x],"
+	data += "y = [y],"
+	data += "texture_path = [new_object.overmap_texture_path],"
+	data += "class_type = [new_object.class_type],"
+	data += "width = [new_object.width],"
+	data += "height = [new_object.height]"
+	var/response = abstract_map_request(ABSTRACT_MAP_SPAWN_OBJECT, data, RUSTG_HTTP_METHOD_POST)
 	if(!response)
 		return FALSE
 

@@ -63,15 +63,6 @@
 	QDEL_LIST(contents)
 	return ..()
 
-/datum/overmap_object/proc/get_type_data()
-	SHOULD_CALL_PARENT(TRUE)
-	. = ""
-	. = "class_type = [class_type]"
-	. = "width = [width]"
-	. = "height = [height]"
-	. = "static = [is_static]"
-	return .
-
 /datum/overmap_object/proc/Initialize(position, name, class_type, texture_path, ...)
 	PROTECTED_PROC(TRUE)
 
@@ -163,7 +154,7 @@
 	return rotation_speed
 
 /datum/overmap_object/proc/Rename(new_name, force)
-	new_name = sanitize_name(new_name) //sets to a falsey value if it's not a valid name
+	new_name = sanitize_name(new_name)
 	if(!new_name || new_name == name)
 		return FALSE
 	name = new_name
